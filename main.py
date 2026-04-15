@@ -10,6 +10,7 @@ def main():
     max_iter = 500
     pop_size = 50
     runs = 50  # 執行 50 次
+    test_func_name = "F2" # 自行設定
     
     all_runs_best_scores = []    # 紀錄每次 run 的最終結果
     all_runs_curves = []         # 紀錄每次 run 的完整收斂過程
@@ -17,7 +18,7 @@ def main():
     print(f"Starting 50 runs of PSO on F2...")
 
     for r in range(runs):
-        pso = PSO(F2, dim, bounds, max_iter, pop_size)
+        pso = PSO(test_func_name, dim, bounds, max_iter, pop_size)
         best_pos, best_score, curve = pso.run()
         
         all_runs_best_scores.append(best_score)
