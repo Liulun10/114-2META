@@ -31,7 +31,7 @@ def run_experiment(func_name, dim=30, max_iter=500, pop_size=50, runs=50):
     # 計算統計數據
     avg_score = np.mean(all_runs_best_scores)
     std_score = np.std(all_runs_best_scores)
-    print(f"完成實驗: {func_name} 平均值: {avg_score:.2e}, 標準差: {std_score:.2e}")
+    print(f"完成實驗: {func_name} 平均值: {avg_score:.2e}, 標準差: {std_score:.2e}, 最佳值: {np.min(all_runs_best_scores):.2e}")
 
     # --- 關鍵：產出該函數專屬的圖表 ---
     plot_convergence_curve(
