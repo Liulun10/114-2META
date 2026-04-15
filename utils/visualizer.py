@@ -14,50 +14,54 @@ def save_plot(filename):
     plt.savefig(path)
     print(f"圖表已儲存至: {path}")
 
-def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve", func_name="UNKNOWN"):
-    plt.figure(figsize=(12, 6)) # 稍微加寬一點，給右邊文字留空間
+def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve", function_name="UNKNOWN"):
+    # 1. 增加圖表總寬度
+    fig = plt.figure(figsize=(14, 6))
+    
+    # 2. 為右側文字預留空間 (left, bottom, right, top 範圍為 0~1)
+    # 將 right 設為 0.8，表示圖表主體只畫到 80% 的位置，右邊留 20% 空白
+    plt.subplots_adjust(right=0.8)
     
     curves = np.array(all_runs_curves)
     avg_curve = np.mean(curves, axis=0)
     
-    # 計算最終統計值
+    # 計算統計值
     final_scores = curves[:, -1]
     mean_val = np.mean(final_scores)
     std_val = np.std(final_scores)
     best_final = np.min(final_scores)
 
-    # 1. 畫出所有 run 的淡色線
+    # 畫線邏輯
     for i in range(len(curves)):
         plt.plot(curves[i], color='gray', alpha=0.1)
-    
-    # 2. 畫出平均收斂線
     plt.plot(avg_curve, color='blue', linewidth=2, label='Average Convergence')
     
-    # 3. 製作資訊文字框 (統計數值)
+    # 3. 調整文字框樣式與位置
     stats_text = (
-        f"Statistics (50 runs):\n"
-        f"{'─'*20}\n"
-        f"Mean: {mean_val:.2e}\n"
-        f"Std Dev: {std_val:.2e}\n"
-        f"Final Best: {best_final:.2e}"
+        f"Statistics (50 runs)\n"
+        f"{'─'*22}\n"
+        f"Function: {function_name}\n\n"
+        f"Mean:\n {mean_val:.4e}\n\n"
+        f"Std Dev:\n {std_val:.4e}\n\n"
+        f"Final Best:\n {best_final:.4e}\n"
+        f"{'─'*22}"
     )
     
-    # 將文字標註在圖表右側 (使用座標系變換，放在圖表框外或右緣)
-    # transform=plt.gca().transAxes 代表使用 0~1 的相對座標
-    plt.text(1.02, 0.5, stats_text, transform=plt.gca().transAxes, 
-             fontsize=10, verticalalignment='center', 
-             bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
+    # x=1.05 代表放在圖表框線外一點點的位置
+    plt.text(1.05, 0.5, stats_text, transform=plt.gca().transAxes, 
+             fontsize=11, verticalalignment='center', linespacing=1.5,
+             bbox=dict(boxstyle='round,pad=0.5', facecolor='white', edgecolor='navy', alpha=0.8))
 
-    plt.title(title)
+    plt.title(title, fontsize=14)
     plt.xlabel('Iteration')
     plt.ylabel('Best Score (Log Scale)')
     plt.yscale('log')
     plt.grid(True, which="both", ls="-", alpha=0.3)
     plt.legend(loc='upper right')
     
-    save_plot(f"convergence_{func_name}.png")
+    save_plot(f"convergence_{function_name}.png")
     plt.show()
-    plt.close() # 關閉畫布避免記憶體累積
+    plt.close()
 
 def plot_box_result(all_final_scores, algorithm_names=["PSO"], function_name="UNKNOWN"):
     """
