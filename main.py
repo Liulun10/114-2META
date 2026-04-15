@@ -2,6 +2,7 @@ import benchmark
 from algorithms.pso import PSO
 from utils.visualizer import plot_convergence_curve, plot_box_result
 import numpy as np
+import time
 
 def run_experiment(func_name, dim=30, max_iter=500, pop_size=50, runs=50):
     """
@@ -49,6 +50,7 @@ def run_experiment(func_name, dim=30, max_iter=500, pop_size=50, runs=50):
 def main():
     # 這裡定義你想要跑的所有函數清單
     # 你可以從 benchmarks.functions.keys() 抓全部，也可以手動指定
+    total_start_time = time.time()
     target_functions = ["F2", "F6", "F9", "F11", "F13", "F15", "F17"]
     
     for func_name in target_functions:
@@ -56,9 +58,12 @@ def main():
             run_experiment(func_name)
         except Exception as e:
             print(f"執行 {func_name} 時發生錯誤: {e}")
+    
+    total_end_time = time.time()
+    duration = total_end_time - total_start_time
 
     print("\n" + "═"*50)
-    print("所有實驗已完成，請至 results 資料夾查看結果。")
+    print(f"所有函數實驗完成！總耗時: {duration:.2f} 秒，請至 results 資料夾查看結果")
 
 if __name__ == "__main__":
     main()
