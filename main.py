@@ -37,13 +37,13 @@ def run_experiment(func_name, dim=30, max_iter=500, pop_size=50, runs=50):
     plot_convergence_curve(
         all_runs_curves, 
         title=f"PSO Convergence: {func_name}", 
-        func_name=func_name
+        function_name=func_name
     )
     
     plot_box_result(
         [all_runs_best_scores], 
         algorithm_names=["PSO"], 
-        func_name=func_name
+        function_name=func_name
     )
 
 def main():
