@@ -1,7 +1,20 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
-def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve"):
+def save_plot(filename):
+    """
+    輔助函式：確保 results 資料夾存在並儲存圖片
+    """
+    folder = "results"
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    
+    path = os.path.join(folder, filename)
+    plt.savefig(path)
+    print(f"圖表已儲存至: {path}")
+
+def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve", function_name="UNKNOWN"):
     """
     all_runs_curves: list of lists (50 runs * max_iter)
     """
@@ -26,10 +39,10 @@ def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve"):
     plt.legend()
     
     # 存檔或顯示
-    plt.savefig('pso_convergence.png')
+    save_plot(f"convergence_{function_name}.png")
     plt.show()
 
-def plot_box_result(all_final_scores, algorithm_names=["PSO"]):
+def plot_box_result(all_final_scores, algorithm_names=["PSO"], function_name="UNKNOWN"):
     """
     畫出 50 runs 最後結果的盒鬚圖，用於比較穩定性
     """
@@ -38,5 +51,5 @@ def plot_box_result(all_final_scores, algorithm_names=["PSO"]):
     plt.title('Final Best Score Distribution (50 Runs)')
     plt.ylabel('Score')
     plt.grid(axis='y', linestyle='--', alpha=0.7)
-    plt.savefig('result_boxplot.png')
+    save_plot(f"boxplot_{function_name}.png")
     plt.show()
