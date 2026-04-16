@@ -1,7 +1,8 @@
 import numpy as np
-from base_algorithm import MetaHeuristic
+#from base_algorithm import MetaHeuristic
+from base_algo import BaseAlgorithm
 
-class ABC(MetaHeuristic):
+class ABC(BaseAlgorithm):
     def run(self):
         # ABC 參數設定
         n_employed = self.pop_size // 2
