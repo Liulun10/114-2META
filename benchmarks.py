@@ -102,3 +102,13 @@ def F17(x):
     term1 = a * (x2 - b * x1**2 + c * x1 - r)**2
     term2 = s * (1 - t) * np.cos(x1)
     return term1 + term2 + s
+
+functions = {
+    "F2": F2,
+    "F6": F6,
+    "F9": F9,
+    "F11": F11,
+    "F13": F13,
+    "F15": F15,
+    "F17": F17
+}

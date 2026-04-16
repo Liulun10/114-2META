@@ -1,4 +1,4 @@
-import benchmark
+import benchmarks
 from algorithms.pso import PSO
 from utils.visualizer import plot_convergence_curve, plot_box_result
 import numpy as np
@@ -8,7 +8,7 @@ def run_experiment(func_name, dim=30, max_iter=500, pop_size=50, runs=50):
     """
     針對單一函數執行完整的 50 Runs 實驗並產出圖表
     """
-    obj_func = benchmark.functions[func_name]
+    obj_func = benchmarks.functions[func_name]
     bounds = (-100, 100) # 大部分基準函數的預設範圍
     
     all_runs_best_scores = []
