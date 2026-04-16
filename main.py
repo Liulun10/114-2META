@@ -1,15 +1,21 @@
-import benchmarks
+import benchmark
 from algorithms.pso import PSO
+from algorithms.abc import ABC as BeeAlgo
+# from algorithms.ga import GA 
 from utils.visualizer import plot_convergence_curve, plot_box_result
 import numpy as np
 import time
 
-def run_experiment(func_name, dim=30, max_iter=500, pop_size=50, runs=50):
-    """
-    針對單一函數執行完整的 50 Runs 實驗並產出圖表
-    """
-    obj_func = benchmarks.functions[func_name]
-    bounds = (-100, 100) # 大部分基準函數的預設範圍
+def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
+    # 1. 從 benchmark 獲取函數細節
+    details = benchmark.get_function_details(func_name)
+    if details is None:
+        print(f"找不到函數 {func_name} 的定義")
+        return
+
+    obj_func = getattr(benchmark, func_name)
+    dim = details['dim']
+    bounds = details['range'] # 這裡會拿到 [-10, 10] 或 [[-5, 10], [0, 15]]
     
     all_runs_best_scores = []
     all_runs_curves = []
@@ -19,9 +25,17 @@ def run_experiment(func_name, dim=30, max_iter=500, pop_size=50, runs=50):
     
     for r in range(runs):
         # ps0, ga, abc 都在這裡改，不需要的直接註解
-        pso = PSO(obj_func, dim, bounds, max_iter, pop_size)
-        best_pos, best_score, curve = pso.run()
-        
+        # pso = PSO(obj_func, dim, bounds, max_iter, pop_size)
+        # best_pos, best_score, curve = pso.run()
+        model = BeeAlgo(
+            obj_func=obj_func, 
+            dim=dim, 
+            search_range=bounds, 
+            pop_size=pop_size, 
+            max_iter=max_iter
+        )
+        best_score,best_pos, curve = model.run()
+
         all_runs_best_scores.append(best_score)
         all_runs_curves.append(curve)
         
@@ -32,18 +46,28 @@ def run_experiment(func_name, dim=30, max_iter=500, pop_size=50, runs=50):
     # 計算統計數據
     avg_score = np.mean(all_runs_best_scores)
     std_score = np.std(all_runs_best_scores)
-    print(f"完成實驗: {func_name} 平均值: {avg_score:.2e}, 標準差: {std_score:.2e}, 最佳值: {np.min(all_runs_best_scores):.2e}")
+    print(f"完成實驗: {func_name} 平均值: {avg_score:.4e}, 標準差: {std_score:.4e}, 最佳值: {np.min(all_runs_best_scores):.4e}")
 
     # --- 關鍵：產出該函數專屬的圖表 ---
+    # plot_convergence_curve(
+    #     all_runs_curves, 
+    #     title=f"PSO Convergence: {func_name}", 
+    #     function_name=func_name
+    # )
     plot_convergence_curve(
         all_runs_curves, 
-        title=f"PSO Convergence: {func_name}", 
+        title=f"ABC Convergence: {func_name}", 
         function_name=func_name
     )
     
+    # plot_box_result(
+    #     [all_runs_best_scores], 
+    #     algorithm_names=["PSO"], 
+    #     function_name=func_name
+    # )
     plot_box_result(
         [all_runs_best_scores], 
-        algorithm_names=["PSO"], 
+        algorithm_names=["ABC"], 
         function_name=func_name
     )
 
@@ -55,7 +79,7 @@ def main():
     
     for func_name in target_functions:
         try:
-            run_experiment(func_name)
+            run_experiment(func_name, max_iter=1000, pop_size=50, runs=50)
         except Exception as e:
             print(f"執行 {func_name} 時發生錯誤: {e}")
     
