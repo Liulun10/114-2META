@@ -108,16 +108,23 @@ def main():
     # 你可以從 benchmarks.functions.keys() 抓全部，也可以手動指定
     
     target_functions = ["F2", "F6", "F9", "F11", "F13", "F15", "F17"]
+    all_results = []
     
     for func_name in target_functions:
         try:
-            run_experiment(func_name, max_iter=1000, pop_size=50, runs=50)
+            result = run_experiment(func_name, max_iter=1000, pop_size=50, runs=50)
+            if result is not None:
+                all_results.append(result)
         except Exception as e:
             print(f"執行 {func_name} 時發生錯誤: {e}")
     
 
     print("\n" + "═"*50)
     print(f"所有函數實驗完成！請至 results 資料夾查看結果")
+
+    # 儲存彙整 CSV
+    if all_results:
+        save_results_csv(all_results)
 
 if __name__ == "__main__":
     main()
