@@ -14,7 +14,7 @@ def save_plot(filename):
     plt.savefig(path)
     print(f"圖表已儲存至: {path}")
 
-def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve", function_name="UNKNOWN"):
+def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve", function_name="UNKNOWN", algorithm_used="UNKOWN"):
     # 1. 增加圖表總寬度
     fig = plt.figure(figsize=(14, 6))
     
@@ -59,11 +59,11 @@ def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve", funct
     plt.grid(True, which="both", ls="-", alpha=0.3)
     plt.legend(loc='upper right')
     
-    save_plot(f"convergence_{function_name}.png")
+    save_plot(f"convergence_{function_name}_{algorithm_used}.png")
     plt.show()
     plt.close()
 
-def plot_box_result(all_final_scores, algorithm_names=["PSO"], function_name="UNKNOWN"):
+def plot_box_result(all_final_scores, algorithm_names=["PSO"], function_name="UNKNOWN", algorithm_used="UNKOWN"):
     """
     畫出 50 runs 最後結果的盒鬚圖，用於比較穩定性
     """
@@ -72,5 +72,5 @@ def plot_box_result(all_final_scores, algorithm_names=["PSO"], function_name="UN
     plt.title('Final Best Score Distribution (50 Runs)')
     plt.ylabel('Score')
     plt.grid(axis='y', linestyle='--', alpha=0.7)
-    save_plot(f"boxplot_{function_name}.png")
+    save_plot(f"boxplot_{function_name}_{algorithm_used}.png")
     plt.show()

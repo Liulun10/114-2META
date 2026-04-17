@@ -1,7 +1,7 @@
 import benchmarks
 from algorithms.pso import PSO
 from algorithms.abc import ABC as BeeAlgo
-# from algorithms.ga import GA 
+from algorithms.ga import GA
 from utils.visualizer import plot_convergence_curve, plot_box_result
 import numpy as np
 import time
@@ -29,7 +29,9 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
     
     for r in range(runs):
         # ps0, ga, abc 都在這裡改，不需要的直接註解
-        model = PSO(obj_func, dim, bounds, max_iter, pop_size)
+        # model = PSO(obj_func, dim, bounds, max_iter, pop_size)
+        model = GA(obj_func, dim, bounds, max_iter, pop_size)
+
         best_pos,best_score, curve = model.run()
         # model = BeeAlgo(
         #     obj_func=obj_func, 
@@ -57,8 +59,9 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
     # --- 關鍵：產出該函數專屬的圖表 ---
     plot_convergence_curve(
         all_runs_curves, 
-        title=f"PSO Convergence: {func_name}", 
-        function_name=func_name
+        title=f"GA Convergence: {func_name}", 
+        function_name=func_name,
+        algorithm_used = "GA"
     )
     # plot_convergence_curve(
     #     all_runs_curves, 
@@ -68,8 +71,9 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
     
     plot_box_result(
         [all_runs_best_scores], 
-        algorithm_names=["PSO"], 
-        function_name=func_name
+        algorithm_names=["GA"], 
+        function_name=func_name,
+        algorithm_used = "GA"
     )
     # plot_box_result(
     #     [all_runs_best_scores], 
@@ -86,7 +90,8 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
         "Time(s)":   f"{exp_duration:.2f}"
     }
 
-def save_results_csv(results, filename="experiment_results.csv"):
+def save_results_csv(results, filename="results_GA.csv"):
+    # filename手動改成實驗的model name
     """將所有實驗結果存成 CSV 至 results 資料夾"""
     folder = "results"
     if not os.path.exists(folder):
