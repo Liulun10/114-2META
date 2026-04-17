@@ -1,0 +1,26 @@
+# 實驗輸出結果（不上傳）
+results/
+
+# Python 快取
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 虛擬環境
+.env
+.venv
+env/
+venv/
+
+# 編輯器設定
+.vscode/
+.idea/
+*.swp
+
+# macOS
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints/

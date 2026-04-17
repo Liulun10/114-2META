@@ -7,9 +7,20 @@ class PSO(BaseAlgorithm):
         self.w = w    # 慣性權重
         self.c1 = c1  # 個體學習因子
         self.c2 = c2  # 群體學習因子
+
+        # 支援對稱邊界 [-a, a] 或非對稱邊界 [[-a, b], [-c, d], ...]
+        bounds_arr = np.array(bounds)
+        if bounds_arr.ndim == 1:
+            # 對稱邊界：每個維度相同
+            self.lb = np.full(dim, bounds_arr[0], dtype=float)
+            self.ub = np.full(dim, bounds_arr[1], dtype=float)
+        else:
+            # 非對稱邊界：每個維度獨立 (shape: [dim, 2])
+            self.lb = bounds_arr[:, 0].astype(float)
+            self.ub = bounds_arr[:, 1].astype(float)
         
         # 初始化粒子位置與速度
-        self.X = np.random.uniform(bounds[0], bounds[1], (pop_size, dim))
+        self.X = np.random.uniform(self.lb, self.ub, (pop_size, dim))
         self.V = np.random.uniform(-1, 1, (pop_size, dim))
         
         # 初始化個體最佳與全域最佳
@@ -45,7 +56,7 @@ class PSO(BaseAlgorithm):
             self.X = self.X + self.V
 
             # 3. 邊界處理 (防止噴出定義域)
-            self.X = np.clip(self.X, self.bounds[0], self.bounds[1])
+            self.X = np.clip(self.X, self.lb, self.ub)
             
             convergence_curve.append(self.gBest_score)
             

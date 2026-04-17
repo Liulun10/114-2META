@@ -41,9 +41,9 @@ def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve", funct
         f"Statistics (50 runs)\n"
         f"{'─'*22}\n"
         f"Function: {function_name}\n\n"
-        f"Mean:\n {mean_val:.4e}\n\n"
-        f"Std Dev:\n {std_val:.4e}\n\n"
-        f"Final Best:\n {best_final:.4e}\n"
+        f"Mean:\n {mean_val:.8f}\n\n"
+        f"Std Dev:\n {std_val:.8f}\n\n"
+        f"Final Best:\n {best_final:.8f}\n"
         f"{'─'*22}"
     )
     
