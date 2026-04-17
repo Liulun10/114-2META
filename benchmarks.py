@@ -5,11 +5,11 @@ def get_function_details(func_name):
     回傳函數的搜尋範圍、維度上限以及理論最優解座標
     """
     details = {
-        "F2":  {"range": [-10, 10],   "dim": 30, "target_x": 0},
-        "F6":  {"range": [-100, 100],   "dim": 30, "target_x": 0},
-        "F9":  {"range": [-5.12, 5.12], "dim": 30, "target_x": 0},
-        "F11": {"range": [-600, 600], "dim": 30, "target_x": 0},
-        "F13": {"range": [-50, 50],     "dim": 30, "target_x": 1},
+        "F2":  {"range": [-10, 10],   "dim": 2, "target_x": [0,0]},
+        "F6":  {"range": [-100, 100],   "dim": 2, "target_x": [0,0]},
+        "F9":  {"range": [-5.12, 5.12], "dim": 2, "target_x": [0,0]},
+        "F11": {"range": [-600, 600], "dim": 2, "target_x": [0,0]},
+        "F13": {"range": [-50, 50],     "dim": 2, "target_x": [1,1]},
         "F15": {"range": [-5, 5],       "dim": 4,  "target_x": None}, # 特殊常數函數
         "F17": {"range": [[-5, 10], [0, 15]], "dim": 2, "target_x": None}
     }
