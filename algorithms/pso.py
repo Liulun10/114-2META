@@ -29,6 +29,9 @@ class PSO(BaseAlgorithm):
         self.gBest_X = None
         self.gBest_score = float('inf')
 
+        # 速度上限：搜尋範圍的 20%，防止粒子爆炸
+        self.Vmax = (self.ub - self.lb) * 0.2
+
     def run(self):
         convergence_curve = []
 
@@ -47,11 +50,15 @@ class PSO(BaseAlgorithm):
                     self.gBest_score = score
                     self.gBest_X = self.X[i].copy()
 
-            # 2. 更新速度與位置
-            r1, r2 = np.random.rand(2)
+            # 2. 更新速度與位置 每個粒子、每個維度都有獨立的隨機擾動
+            r1 = np.random.rand(self.pop_size, self.dim)
+            r2 = np.random.rand(self.pop_size, self.dim)
             self.V = (self.w * self.V + 
                       self.c1 * r1 * (self.pBest_X - self.X) + 
                       self.c2 * r2 * (self.gBest_X - self.X))
+            
+            # 限制速度在 [-Vmax, Vmax]，防止粒子飛出
+            self.V = np.clip(self.V, -self.Vmax, self.Vmax)
             
             self.X = self.X + self.V
 
