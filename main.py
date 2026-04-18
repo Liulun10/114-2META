@@ -2,7 +2,7 @@ import benchmarks
 from algorithms.pso import PSO
 from algorithms.abc import ABC as BeeAlgo
 from algorithms.ga import GA
-from utils.visualizer import plot_convergence_curve, plot_box_result
+from utils.visualizer import plot_convergence_curve, plot_box_result, plot_3d_benchmarks
 import numpy as np
 import time
 import os
@@ -114,6 +114,9 @@ def main():
     
     target_functions = ["F2", "F6", "F9", "F11", "F13", "F15", "F17"]
     all_results = []
+
+    print("正在產生 benchmark 函數 3D 地形圖...")
+    plot_3d_benchmarks(benchmarks)
     
     for func_name in target_functions:
         try:

@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from matplotlib import cm
+from mpl_toolkits.mplot3d import Axes3D
 
 def save_plot(filename):
     """
@@ -74,3 +76,80 @@ def plot_box_result(all_final_scores, algorithm_names=["PSO"], function_name="UN
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     save_plot(f"boxplot_{function_name}_{algorithm_used}.png")
     plt.show()
+    plt.close()
+
+def plot_3d_benchmarks(benchmarks_module, resolution=150):
+    """
+    畫出所有 benchmark 函數的 3D 曲面圖，存至 results/3d_benchmarks.png。
+ 
+    Parameters
+    ----------
+    benchmarks_module : module
+        直接傳入 benchmarks 模組（import benchmarks 後傳進來即可）。
+    resolution : int
+        每個軸的格點數，越高越細緻但越慢，預設 150。
+ 
+    Usage
+    -----
+        import benchmarks
+        from utils.visualizer import plot_3d_benchmarks
+        plot_3d_benchmarks(benchmarks)
+    """
+ 
+    # ── 函數清單：(函數名, 子圖標題, x1 範圍, x2 範圍, 維度) ────────────
+    # F15 是 4 維函數，這裡固定 x3=x4=0，掃 x1/x2 的截面來呈現地形
+    FUNC_CONFIG = [
+        ("F2",  "F2: Schwefel 2.22",  (-10, 10),       (-10, 10),     2),
+        ("F6",  "F6: Step",           (-100, 100),     (-100, 100),   2),
+        ("F9",  "F9: Rastrigin",      (-5.12, 5.12),   (-5.12, 5.12), 2),
+        ("F11", "F11: Griewank",      (-600, 600),     (-600, 600),   2),
+        ("F13", "F13: Penalized",     (-50, 50),       (-50, 50),     2),
+        ("F15", "F15: Kowalik\n(D=4, x3=x4=0 slice)", (-5, 5), (-5, 5), 4),
+        ("F17", "F17: Branin",        (-5, 10),        (0, 15),       2),
+    ]
+ 
+    n_funcs = len(FUNC_CONFIG)
+    ncols = 2
+    nrows = (n_funcs + 1) // ncols  # 4 列
+ 
+    fig = plt.figure(figsize=(14, nrows * 6))
+    fig.suptitle("3D Surface Plots of Benchmark Functions (D=2)",
+                 fontsize=16, fontweight='bold', y=0.95)
+ 
+    for idx, (fname, title, x1_rng, x2_rng, dim) in enumerate(FUNC_CONFIG):
+        func = getattr(benchmarks_module, fname)
+ 
+        # 建立格點
+        x1 = np.linspace(x1_rng[0], x1_rng[1], resolution)
+        x2 = np.linspace(x2_rng[0], x2_rng[1], resolution)
+        X1, X2 = np.meshgrid(x1, x2)
+ 
+        # 計算函數值
+        Z = np.zeros_like(X1)
+        for i in range(resolution):
+            for j in range(resolution):
+                if dim == 4:
+                    pt = np.array([X1[i, j], X2[i, j], 0.0, 0.0])
+                else:
+                    pt = np.array([X1[i, j], X2[i, j]])
+                Z[i, j] = func(pt)
+ 
+        ax = fig.add_subplot(nrows, ncols, idx + 1, projection='3d')
+        surf = ax.plot_surface(X1, X2, Z, cmap=cm.viridis,
+                               alpha=0.85, linewidth=0, antialiased=True)
+ 
+        ax.set_title(title, fontsize=11, fontweight='bold', pad=6)
+        ax.set_xlabel("x₁", fontsize=9, labelpad=4)
+        ax.set_ylabel("x₂", fontsize=9, labelpad=4)
+        ax.set_zlabel("f(x)", fontsize=9, labelpad=4)
+        ax.tick_params(labelsize=7)
+        fig.colorbar(surf, ax=ax, shrink=0.45, aspect=8, pad=0.12)
+ 
+    # 最後一格空白（7 個函數 / 2 列 → 第 8 格留空）
+    if n_funcs % ncols != 0:
+        fig.add_subplot(nrows, ncols, n_funcs + 1).axis('off')
+ 
+    plt.subplots_adjust(left=0.05, right=0.95, top=0.85, bottom=0.05, hspace=0.4, wspace=0.3)
+    save_plot("3d_benchmarks.png")
+    plt.show()
+    plt.close()
