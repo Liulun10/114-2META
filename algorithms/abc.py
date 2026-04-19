@@ -1,5 +1,4 @@
 import numpy as np
-#from base_algorithm import MetaHeuristic
 from base_algo import BaseAlgorithm
 
 class ABC(BaseAlgorithm):
@@ -25,21 +24,20 @@ class ABC(BaseAlgorithm):
             
         gbest_score = float('inf')
         gbest_pos = None
-        self.history = []
+        convergence_curve = []
+        mean_fitness_curve = []
 
         for t in range(self.max_iter):
             # --- A. 雇傭蜂階段 (Employed Bee Phase) ---
             for i in range(n_employed):
-                # 隨機選一個不同的蜜源來進行擾動
                 k = np.random.choice([j for j in range(n_employed) if j != i])
                 phi = np.random.uniform(-1, 1, self.dim)
                 
-                # 產生新解
                 new_sol = foods[i] + phi * (foods[i] - foods[k])
                 new_sol = np.clip(new_sol, self.lb, self.ub)
                 
                 new_fit = get_fitness(new_sol)
-                if new_fit > fitness[i]: # 貪婪選擇
+                if new_fit > fitness[i]:
                     foods[i] = new_sol
                     fitness[i] = new_fit
                     trial[i] = 0
@@ -47,7 +45,6 @@ class ABC(BaseAlgorithm):
                     trial[i] += 1
 
             # --- B. 觀察蜂階段 (Onlooker Bee Phase) ---
-            # 根據適應度計算被選中的機率 (輪盤法)
             probs = fitness / np.sum(fitness)
             for _ in range(n_onlooker):
                 i = np.random.choice(range(n_employed), p=probs)
@@ -65,21 +62,21 @@ class ABC(BaseAlgorithm):
                 else:
                     trial[i] += 1
 
-            # 更新當前全域最佳解
+            # 更新當前全域最佳解，並統一計算本代所有蜜源的目標函數值
+            current_scores = np.array([self.obj_func(foods[i]) for i in range(n_employed)])
             for i in range(n_employed):
-                current_score = self.obj_func(foods[i])
-                if current_score < gbest_score:
-                    gbest_score = current_score
+                if current_scores[i] < gbest_score:
+                    gbest_score = current_scores[i]
                     gbest_pos = foods[i].copy()
             
             # --- C. 偵查蜂階段 (Scout Bee Phase) ---
-            # 如果某蜜源超過 limit 次沒改進，則放棄該蜜源，隨機重新產生
             max_trial_idx = np.argmax(trial)
             if trial[max_trial_idx] > limit:
                 foods[max_trial_idx] = np.random.uniform(self.lb, self.ub, self.dim)
                 fitness[max_trial_idx] = get_fitness(foods[max_trial_idx])
                 trial[max_trial_idx] = 0
                 
-            self.history.append(gbest_score)
+            convergence_curve.append(gbest_score)
+            mean_fitness_curve.append(float(np.mean(current_scores)))
             
-        return gbest_score, gbest_pos, self.history
+        return gbest_pos, gbest_score, convergence_curve, mean_fitness_curve
