@@ -124,6 +124,7 @@ class GA(BaseAlgorithm):
         best_score = fitness[best_idx]
 
         convergence_curve = []
+        mean_fitness_curve = []
 
         for _ in range(self.max_iter):
             new_pop = []
@@ -158,5 +159,6 @@ class GA(BaseAlgorithm):
                 best_pos   = pop[gen_best_idx].copy()
 
             convergence_curve.append(best_score)
+            mean_fitness_curve.append(float(np.mean(fitness)))
 
-        return best_pos, best_score, convergence_curve
+        return best_pos, best_score, convergence_curve, mean_fitness_curve

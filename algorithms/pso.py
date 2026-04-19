@@ -34,11 +34,13 @@ class PSO(BaseAlgorithm):
 
     def run(self):
         convergence_curve = []
+        mean_fitness_curve = []
 
         for t in range(self.max_iter):
-            # 1. 計算適應值 (Fitness)
+            current_scores = np.array([self.obj_func(self.X[i]) for i in range(self.pop_size)])  # ← 新增，統一計算本代所有粒子的適應值
+
             for i in range(self.pop_size):
-                score = self.obj_func(self.X[i])
+                score = current_scores[i]
                 
                 # 更新個體最佳 pBest
                 if score < self.pBest_score[i]:
@@ -66,5 +68,6 @@ class PSO(BaseAlgorithm):
             self.X = np.clip(self.X, self.lb, self.ub)
             
             convergence_curve.append(self.gBest_score)
+            mean_fitness_curve.append(float(np.mean(current_scores)))
             
-        return self.gBest_X, self.gBest_score, convergence_curve
+        return self.gBest_X, self.gBest_score, convergence_curve, mean_fitness_curve

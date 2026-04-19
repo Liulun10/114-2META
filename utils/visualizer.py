@@ -61,7 +61,7 @@ def plot_convergence_curve(all_runs_curves, title="PSO Convergence Curve", funct
     plt.grid(True, which="both", ls="-", alpha=0.3)
     plt.legend(loc='upper right')
     
-    save_plot(f"convergence_{function_name}_{algorithm_used}.png")
+    save_plot(f"convergence_{function_name}_{algorithm_used}_100iters.png")
     plt.show()
     plt.close()
 
@@ -74,7 +74,7 @@ def plot_box_result(all_final_scores, algorithm_names=["PSO"], function_name="UN
     plt.title('Final Best Score Distribution (50 Runs)')
     plt.ylabel('Score')
     plt.grid(axis='y', linestyle='--', alpha=0.7)
-    save_plot(f"boxplot_{function_name}_{algorithm_used}.png")
+    save_plot(f"boxplot_{function_name}_{algorithm_used}_100iters.png")
     plt.show()
     plt.close()
 

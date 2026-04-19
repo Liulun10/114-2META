@@ -8,7 +8,7 @@ import time
 import os
 import csv
 
-def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
+def run_experiment(func_name, max_iter=100, pop_size=50, runs=50):#, dim=30
     # 1. 從 benchmark 獲取函數細節
     details = benchmarks.get_function_details(func_name)
     if details is None:
@@ -29,8 +29,8 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
     
     for r in range(runs):
         # ps0, ga, abc 都在這裡改，不需要的直接註解
-        # model = PSO(obj_func, dim, bounds, max_iter, pop_size)
-        model = GA(obj_func, dim, bounds, max_iter, pop_size)
+        model = PSO(obj_func, dim, bounds, max_iter, pop_size)
+        # model = GA(obj_func, dim, bounds, max_iter, pop_size)
 
         best_pos,best_score, curve = model.run()
         # model = BeeAlgo(
@@ -59,9 +59,9 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
     # --- 關鍵：產出該函數專屬的圖表 ---
     plot_convergence_curve(
         all_runs_curves, 
-        title=f"GA Convergence: {func_name}", 
+        title=f"PSO Convergence: {func_name}", 
         function_name=func_name,
-        algorithm_used = "GA"
+        algorithm_used = "PSO"
     )
     # plot_convergence_curve(
     #     all_runs_curves, 
@@ -71,9 +71,9 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
     
     plot_box_result(
         [all_runs_best_scores], 
-        algorithm_names=["GA"], 
+        algorithm_names=["PSO"], 
         function_name=func_name,
-        algorithm_used = "GA"
+        algorithm_used = "PSO"
     )
     # plot_box_result(
     #     [all_runs_best_scores], 
@@ -83,14 +83,14 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
 
     return {
         "Function":  func_name,
-        # "Runs":      runs,
-        # "Mean":      f"{avg_score:.8f}",
-        # "Std":       f"{std_score:.8f}",
-        # "Best":      f"{best_score:.8f}",
+        "Runs":      runs,
+        "Mean":      f"{avg_score:.8f}",
+        "Std":       f"{std_score:.8f}",
+        "Best":      f"{best_score:.8f}",
         "Time(s)":   f"{exp_duration:.2f}"
     }
 
-def save_results_csv(results, filename="results_GA.csv"):
+def save_results_csv(results, filename="results_PSO_100iters.csv"):
     # filename手動改成實驗的model name
     """將所有實驗結果存成 CSV 至 results 資料夾"""
     folder = "results"
@@ -98,8 +98,8 @@ def save_results_csv(results, filename="results_GA.csv"):
         os.makedirs(folder)
     
     path = os.path.join(folder, filename)
-    # fieldnames = ["Function", "Runs", "Mean", "Std", "Best", "Time(s)"]
-    fieldnames = ["Function", "Time(s)"]
+    fieldnames = ["Function", "Runs", "Mean", "Std", "Best", "Time(s)"]
+    # fieldnames = ["Function", "Time(s)"]
  
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -115,8 +115,8 @@ def main():
     target_functions = ["F2", "F6", "F9", "F11", "F13", "F15", "F17"]
     all_results = []
 
-    print("正在產生 benchmark 函數 3D 地形圖...")
-    plot_3d_benchmarks(benchmarks)
+    # print("正在產生 benchmark 函數 3D 地形圖...")
+    # plot_3d_benchmarks(benchmarks)
     
     for func_name in target_functions:
         try:
