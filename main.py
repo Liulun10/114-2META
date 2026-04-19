@@ -61,7 +61,8 @@ def run_experiment(func_name, max_iter=100, pop_size=50, runs=50):#, dim=30
         all_runs_curves, 
         title=f"PSO Convergence: {func_name}", 
         function_name=func_name,
-        algorithm_used = "PSO"
+        algorithm_used = "PSO",
+        iters = max_iter
     )
     # plot_convergence_curve(
     #     all_runs_curves, 
@@ -73,7 +74,8 @@ def run_experiment(func_name, max_iter=100, pop_size=50, runs=50):#, dim=30
         [all_runs_best_scores], 
         algorithm_names=["PSO"], 
         function_name=func_name,
-        algorithm_used = "PSO"
+        algorithm_used = "PSO",
+        iters = max_iter        
     )
     # plot_box_result(
     #     [all_runs_best_scores], 
