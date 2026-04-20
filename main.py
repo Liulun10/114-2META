@@ -42,7 +42,7 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
         # model = PSO(obj_func, dim, bounds, max_iter, pop_size)
         model = GA(obj_func, dim, bounds, max_iter, pop_size)
 
-        best_pos,best_score, curve, mean_curve = model.run()
+        
         # model = BeeAlgo(
         #     obj_func=obj_func, 
         #     dim=dim, 
@@ -50,7 +50,7 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
         #     pop_size=pop_size, 
         #     max_iter=max_iter
         # )
-        # best_score,best_pos, curve = model.run()  # 注意 ABC 的回傳順序與 PSO 不同，請根據實際情況調整
+        best_pos,best_score, curve, mean_curve = model.run()
 
         all_runs_best_scores.append(best_score)
         all_runs_curves.append(curve)
@@ -89,11 +89,7 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
         algorithm_used = "GA",
         iters = max_iter
     )
-    # plot_convergence_curve(
-    #     all_runs_curves, 
-    #     title=f"ABC Convergence: {func_name}", 
-    #     function_name=func_name
-    # )
+
     
     plot_box_result(
         [all_runs_best_scores], 
@@ -102,11 +98,7 @@ def run_experiment(func_name, max_iter=1000, pop_size=50, runs=50):#, dim=30
         algorithm_used = "GA",
         iters = max_iter        
     )
-    # plot_box_result(
-    #     [all_runs_best_scores], 
-    #     algorithm_names=["ABC"], 
-    #     function_name=func_name
-    # )
+
 
     return {
         "Function":  func_name,
